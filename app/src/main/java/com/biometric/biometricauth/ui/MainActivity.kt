@@ -1,14 +1,8 @@
 package com.biometric.biometricauth.ui
 
-import android.Manifest
 import android.app.Application
-import android.app.KeyguardManager
-import android.content.Context
-import android.content.pm.PackageManager
-import android.hardware.biometrics.BiometricPrompt
 import android.os.Build
 import android.os.Bundle
-import android.os.CancellationSignal
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,8 +12,6 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -30,24 +22,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.text
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.biometric.biometricauth.BuildCard2
 import com.biometric.biometricauth.R
 import com.biometric.biometricauth.ui.components.*
 import com.biometric.biometricauth.ui.enums.AuthenticationMode
@@ -105,6 +90,8 @@ fun AuthenticationContent(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
+
+        BuildCard2(resources = application.resources)
         if (authenticationState.isLoading) {
             CircularProgressIndicator()
         } else {
