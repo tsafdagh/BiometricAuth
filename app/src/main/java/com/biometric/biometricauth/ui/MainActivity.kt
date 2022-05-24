@@ -54,6 +54,7 @@ class MainActivity : ComponentActivity() {
             val viewModel: AuthenticationViewModel = viewModel()
 
             BiometricAuthTheme {
+                viewModel.uiState
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
