@@ -41,6 +41,7 @@ import com.biometric.biometricauth.entities.*
 import com.biometric.biometricauth.ui.theme.BiometricAuthTheme
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
+import com.pdftron.pdf.controls.DocumentActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -120,12 +121,15 @@ class MainActivity : ComponentActivity() {
                                         documentLauncher.launch(
                                             arrayOf(
                                                 "application/pdf",
-                                                "docx",
-                                                "xlsx",
-                                                "txt",
-                                                "pptx"
+                                                "application/msword",
+                                                "application/ms-doc",
+                                                "application/doc",
+                                                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                                                "text/plain",
+                                                "application/xslt+xml",
                                             )
                                         )
+                                        //https://android.googlesource.com/platform/external/mime-support/+/9817b71a54a2ee8b691c1dfa937c0f9b16b3473c/mime.types
 
                                     }
                                 }
