@@ -1,4 +1,4 @@
-package com.biometric.biometricauth.ui.enums
+package com.biometric.biometricauth.ui.authEnums
 
 import androidx.annotation.StringRes
 import com.biometric.biometricauth.R

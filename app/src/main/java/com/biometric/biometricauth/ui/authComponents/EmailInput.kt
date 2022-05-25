@@ -1,4 +1,4 @@
-package com.biometric.biometricauth.ui.components
+package com.biometric.biometricauth.ui.authComponents
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions

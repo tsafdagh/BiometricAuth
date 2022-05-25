@@ -1,4 +1,4 @@
-package com.biometric.biometricauth.ui.components
+package com.biometric.biometricauth.ui.authComponents
 
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.biometric.biometricauth.R
-import com.biometric.biometricauth.ui.enums.AuthenticationMode
+import com.biometric.biometricauth.ui.authEnums.AuthenticationMode
 
 @Composable
 fun AuthenticationButton(

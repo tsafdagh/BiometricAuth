@@ -1,4 +1,4 @@
-package com.biometric.biometricauth.ui.components
+package com.biometric.biometricauth.ui.authComponents
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height

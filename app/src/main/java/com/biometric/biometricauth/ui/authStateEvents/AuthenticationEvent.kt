@@ -1,4 +1,4 @@
-package com.biometric.biometricauth.ui.stateEvents
+package com.biometric.biometricauth.ui.authStateEvents
 
 import android.app.Application
 

@@ -56,7 +56,19 @@ dependencies {
 
     implementation "androidx.biometric:biometric-ktx:1.2.0-alpha04"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1"
+
+
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    implementation "androidx.compose.runtime:runtime:$compose_version"
+    implementation "com.google.accompanist:accompanist-flowlayout:0.24.9-beta"
+    // CameraX
+    def camerax_version = "1.0.1"
+    implementation "androidx.camera:camera-camera2:$camerax_version"
+    implementation "androidx.camera:camera-lifecycle:$camerax_version"
+    implementation "androidx.camera:camera-view:1.0.0-alpha27"
+// Icons
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
+
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

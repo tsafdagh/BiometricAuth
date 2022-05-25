@@ -14,9 +14,9 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.biometric.biometricauth.R
-import com.biometric.biometricauth.ui.enums.AuthenticationMode
-import com.biometric.biometricauth.ui.enums.PasswordRequirements
-import com.biometric.biometricauth.ui.stateEvents.AuthenticationEvent
+import com.biometric.biometricauth.ui.authEnums.AuthenticationMode
+import com.biometric.biometricauth.ui.authEnums.PasswordRequirements
+import com.biometric.biometricauth.ui.authStateEvents.AuthenticationEvent
 import com.biometric.biometricauth.ui.uiStates.AuthenticationState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

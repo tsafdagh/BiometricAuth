@@ -7,9 +7,12 @@
     <color name="teal_200_low">#15D6C4</color>
     <color name="teal_200_low_center">#18DECB</color>
 
+
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="ligth_red">#EE2424</color>
-    <color name="ligth_red2">#D43C3C</color>
+    <color name="ligth_black">#545454</color>
+
+
 </resources>

@@ -1,7 +1,7 @@
 package com.biometric.biometricauth.ui.uiStates
 
-import com.biometric.biometricauth.ui.enums.AuthenticationMode
-import com.biometric.biometricauth.ui.enums.PasswordRequirements
+import com.biometric.biometricauth.ui.authEnums.AuthenticationMode
+import com.biometric.biometricauth.ui.authEnums.PasswordRequirements
 
 data class AuthenticationState(
     val authenticationMode: AuthenticationMode = AuthenticationMode.SIGN_IN,

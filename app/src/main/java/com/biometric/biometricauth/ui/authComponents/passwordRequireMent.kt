@@ -1,4 +1,4 @@
-package com.biometric.biometricauth.ui.components
+package com.biometric.biometricauth.ui.authComponents
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -17,7 +17,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.biometric.biometricauth.R
-import com.biometric.biometricauth.ui.enums.PasswordRequirements
+import com.biometric.biometricauth.ui.authEnums.PasswordRequirements
 
 @Composable
 fun PasswordRequirementsComponent(
