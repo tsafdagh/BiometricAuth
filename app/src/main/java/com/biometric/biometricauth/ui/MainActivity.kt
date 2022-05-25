@@ -2,7 +2,6 @@ package com.biometric.biometricauth.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -25,24 +24,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.biometric.biometricauth.R
+import com.biometric.biometricauth.Utils
+import com.biometric.biometricauth.entities.*
 import com.biometric.biometricauth.ui.theme.BiometricAuthTheme
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+
 class MainActivity : ComponentActivity() {
 
 
-    var initialBitmap: Bitmap? = null
-    var imageUriList = mutableStateListOf(initialBitmap)
+    var initialBitmap: CustomFile? = null
+    var CustumFileList = mutableStateListOf(initialBitmap)
 
     @OptIn(ExperimentalMaterialApi::class)
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -53,23 +60,41 @@ class MainActivity : ComponentActivity() {
 
             val viewModel: CameraViewModel = viewModel()
 
-            val bitmap = remember { mutableStateOf(initialBitmap) }
             val cameraLauncher =
                 rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) {
-                    bitmap.value = it
                     it?.let {
-                        imageUriList.add(it)
+                        CustumFileList.add(
+                            ImageFileFromCamera(
+                                type = EnumFileType.IMAGE_FROM_CAMERA.name,
+                                bitmap = it
+                            )
+                        )
                     }
                 }
 
             val galeryLauncher =
-                rememberLauncherForActivityResult(ActivityResultContracts.GetMultipleContents()) {
+                rememberLauncherForActivityResult(ActivityResultContracts.GetMultipleContents()) { uriList ->
 
+                    uriList.forEach {
+                        CustumFileList.add(
+                            ImageFileFileFromGallery(
+                                type = EnumFileType.IMAGE_FROM_GALLERY.name,
+                                Uri = it
+                            )
+                        )
+                    }
                 }
 
             val documentLauncher =
-                rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) {
-
+                rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uriList ->
+                    uriList.forEach {
+                        CustumFileList.add(
+                            DocumentFIle(
+                                type = EnumFileType.DOCUMENT_FILE.name,
+                                Uri = it
+                            )
+                        )
+                    }
                 }
 
             BiometricAuthTheme {
@@ -87,13 +112,20 @@ class MainActivity : ComponentActivity() {
                                         if (shouldShowCamera.value) {
                                             cameraLauncher.launch()
                                         }
-
                                     }
                                     "Photo library" -> {
                                         galeryLauncher.launch("image/*")
                                     }
                                     "Document" -> {
-                                        galeryLauncher.launch("*/*")
+                                        documentLauncher.launch(
+                                            arrayOf(
+                                                "application/pdf",
+                                                "docx",
+                                                "xlsx",
+                                                "txt",
+                                                "pptx"
+                                            )
+                                        )
 
                                     }
                                 }
@@ -111,7 +143,7 @@ class MainActivity : ComponentActivity() {
                         MainScreen(
                             scope = scope,
                             state = modalBottomSheetState,
-                            imageUriList.toList()
+                            CustumFileList.toList()
                         )
                     }
                 }
@@ -157,7 +189,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MainScreen(scope: CoroutineScope, state: ModalBottomSheetState, uriList: List<Bitmap?>) {
+fun MainScreen(scope: CoroutineScope, state: ModalBottomSheetState, uriList: List<CustomFile?>) {
     Column(
         Modifier
             .fillMaxSize()
@@ -171,9 +203,9 @@ fun MainScreen(scope: CoroutineScope, state: ModalBottomSheetState, uriList: Lis
             mainAxisSpacing = 8.dp,
             mainAxisAlignment = MainAxisAlignment.Start
         ) {
-            uriList.forEach {
-                if (it != null) {
-                    ImageCardItem(data = it)
+            uriList.forEach { currentFile ->
+                if (currentFile != null) {
+                    ImageCardItem(customFile = currentFile)
                 }
             }
         }
@@ -193,19 +225,57 @@ fun MainScreen(scope: CoroutineScope, state: ModalBottomSheetState, uriList: Lis
     }
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
-fun ImageCardItem(data: Bitmap) {
+fun ImageCardItem(customFile: CustomFile) {
     Box(
         modifier = Modifier
             .width(80.dp)
             .height(150.dp)
             .clip(RoundedCornerShape(corner = CornerSize(6.dp)))
     ) {
-        Image(
-            bitmap = data.asImageBitmap(),
-            contentDescription = null,
-            modifier = Modifier.size(400.dp)
-        )
+        when (customFile) {
+            is ImageFileFromCamera -> {
+                Image(
+                    bitmap = customFile.bitmap.asImageBitmap(),
+                    contentDescription = null,
+                    modifier = Modifier.size(400.dp)
+                )
+            }
+            is ImageFileFileFromGallery -> {
+                Image(
+                    painter = rememberImagePainter(customFile.Uri),
+                    contentDescription = null,
+                    modifier = Modifier.size(400.dp)
+                )
+            }
+            is DocumentFIle -> {
+
+                val context = LocalContext.current
+                val fileExt = customFile.Uri?.let { Utils.getMimeType(context = context, uri = it) }?:""
+                Log.d("FIleExt ", "$fileExt")
+
+                val imageResource = when(fileExt){
+                    "pdf" ->{
+                        R.drawable.ic_baseline_pdf
+                    }
+                    "docx" ->{
+                        R.drawable.ic_docs
+
+                    }
+                    else ->{
+                        R.drawable.other_doc
+                    }
+                }
+                Image(
+                    painter = painterResource(id = imageResource),
+                    contentDescription = null,
+                    modifier = Modifier.size(400.dp)
+                )
+
+
+            }
+        }
     }
 }
 

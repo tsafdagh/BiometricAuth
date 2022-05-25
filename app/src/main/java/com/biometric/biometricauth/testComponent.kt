@@ -120,7 +120,7 @@ fun BuildCard2(modifier: Modifier = Modifier, resources:Resources) {
                 .padding(0.dp)
         ) {
             val colorRgbr = ResourcesCompat.getColor(resources , R.color.teal_200, null)
-            val myDarken = ColorUtils2.darkenColor(colorRgbr)
+            val myDarken = Utils.darkenColor(colorRgbr)
             Surface(
                 modifier =
                 Modifier.fillMaxSize(),
