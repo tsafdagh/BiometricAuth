@@ -1,16 +1,21 @@
 package com.biometric.biometricauth.ui
 
 import android.Manifest
+import android.app.ListActivity
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
 import androidx.annotation.RequiresApi
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,9 +32,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -41,7 +46,6 @@ import com.biometric.biometricauth.entities.*
 import com.biometric.biometricauth.ui.theme.BiometricAuthTheme
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
-import com.pdftron.pdf.controls.DocumentActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -100,6 +104,7 @@ class MainActivity : ComponentActivity() {
 
             BiometricAuthTheme {
 
+
                 Surface(modifier = Modifier.background(color = colorResource(id = R.color.black))) {
 
                     val modalBottomSheetState =
@@ -144,11 +149,26 @@ class MainActivity : ComponentActivity() {
                         sheetBackgroundColor = colorResource(id = R.color.black),
                         modifier = Modifier.padding(horizontal = 6.dp)
                     ) {
-                        MainScreen(
-                            scope = scope,
-                            state = modalBottomSheetState,
-                            CustumFileList.toList()
-                        )
+
+                        val url =
+                            "https://docs.google.com/gview?embedded=true&url=" + "https://www.openska.com/pdf/formation-reactjs.pdf"
+                        AndroidView(factory = {
+                            val builder = CustomTabsIntent.Builder()
+                            builder.setShowTitle(true)
+                            val tabIntent = builder.build()
+                            View(it).apply {
+                                tabIntent.launchUrl(
+                                    it,
+                                    Uri.parse(url)
+                                )
+                            }
+                        })
+
+                        /*          MainScreen(
+                                      scope = scope,
+                                      state = modalBottomSheetState,
+                                      CustumFileList.toList()
+                                  )*/
                     }
                 }
 
@@ -256,18 +276,19 @@ fun ImageCardItem(customFile: CustomFile) {
             is DocumentFIle -> {
 
                 val context = LocalContext.current
-                val fileExt = customFile.Uri?.let { Utils.getMimeType(context = context, uri = it) }?:""
+                val fileExt =
+                    customFile.Uri?.let { Utils.getMimeType(context = context, uri = it) } ?: ""
                 Log.d("FIleExt ", "$fileExt")
 
-                val imageResource = when(fileExt){
-                    "pdf" ->{
+                val imageResource = when (fileExt) {
+                    "pdf" -> {
                         R.drawable.ic_baseline_pdf
                     }
-                    "docx" ->{
+                    "docx" -> {
                         R.drawable.ic_docs
 
                     }
-                    else ->{
+                    else -> {
                         R.drawable.other_doc
                     }
                 }

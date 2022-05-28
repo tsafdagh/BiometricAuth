@@ -12,5 +12,7 @@ class BiometricApplication :Application() {
     override fun onCreate() {
         super.onCreate()
         userPref = UserSharedPref(this)
+
+
     }
 }
