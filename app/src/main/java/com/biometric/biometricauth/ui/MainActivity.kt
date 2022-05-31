@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -21,14 +22,17 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.biometric.biometricauth.R
+import com.biometric.biometricauth.convertDateToSpecificStringFormat
 import com.biometric.biometricauth.ui.theme.BiometricAuthTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 class MainActivity : ComponentActivity() {
 
@@ -62,13 +66,13 @@ class MainActivity : ComponentActivity() {
                         // scrimColor = Color.Red,  // Color for the fade background when you open/close the bottom sheet
                     ) {
                         Scaffold(
-                            topBar = { TopBar() },
+                            topBar = { TopBar(isIconPinned = false) },
                             backgroundColor = colorResource(id = R.color.ligth_red)
                         ) {
                             MainScreen(
                                 modifier = Modifier,
                                 scope = scope,
-                                state = bottomSheetScaffoldState
+                                state = bottomSheetScaffoldState,
                             )
                         }
                     }
@@ -78,7 +82,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun TopBar(isIconPinned: Boolean = false) {
+    fun TopBar(isIconPinned: Boolean = true) {
         TopAppBar(
             title = {
                 TopBarContaint(isIconPinned)
@@ -96,16 +100,15 @@ class MainActivity : ComponentActivity() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = stringResource(R.string.app_name), fontSize = 18.sp)
-
-            val backgroundShapeColor = if (isIconPinned) colorResource(id = R.color.too_low_red) else Color.White
+            val backgroundShapeColor =
+                if (isIconPinned) colorResource(id = R.color.too_low_red) else Color.White
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 2.dp)
                     .background(
                         color = backgroundShapeColor,
                         shape = RoundedCornerShape(22.dp)
                     )
-                    .padding(2.dp)
+                    .padding(horizontal = 6.dp, vertical = 2.dp)
             ) {
                 if (isIconPinned) {
                     Icon(
@@ -114,19 +117,19 @@ class MainActivity : ComponentActivity() {
                         contentDescription = null
                     )
                 } else {
-                    Box(
+                    Row(
                         modifier = Modifier
                             .background(
                                 colorResource(id = R.color.hellow_color),
                                 shape = CircleShape
                             )
                             .padding(1.dp),
-
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(22.dp)
-                                .align(Alignment.Center),
+                                .size(22.dp),
                             painter = painterResource(id = R.drawable.ic_baseline_push_pin_24),
                             contentDescription = null
                         )
@@ -139,7 +142,7 @@ class MainActivity : ComponentActivity() {
                         "Pin"
                     } else {
                         "Pinned"
-                    }, color = textColor,fontSize = 14.sp
+                    }, color = textColor, fontSize = 14.sp
                 )
 
             }
@@ -151,31 +154,53 @@ class MainActivity : ComponentActivity() {
     fun MainScreen(
         modifier: Modifier = Modifier,
         scope: CoroutineScope,
-        state: BottomSheetScaffoldState
+        state: BottomSheetScaffoldState,
+        backgroundColor: Color = colorResource(id = R.color.ligth_red2),
+        date: Date = Date()
     ) {
         Column(
-            modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
+            modifier
+                .fillMaxSize()
+                .background(color = backgroundColor),
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = colorResource(id = R.color.teal_200_low),
-                    contentColor = Color.White
-                ),
-                onClick = {
-                    scope.launch {
-                        if (state.bottomSheetState.isCollapsed) {
-                            state.bottomSheetState.expand()
-                        } else {
-                            state.bottomSheetState.collapse()
-                        }
-                    }
-                }) {
-                if (state.bottomSheetState.isCollapsed) {
-                    Text(text = "Open Bottom Sheet Scaffold")
-                } else {
-                    Text(text = "Close Bottom Sheet Scaffold")
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.7F)
+                    .padding(horizontal = 18.dp, vertical = 8.dp)
+                    .background(
+                        color = colorResource(
+                            id = R.color.ligth_red2_transparent
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                    .border(
+                        width = 0.5.dp,
+                        color = colorResource(id = R.color.too_low_red),
+                        shape = RoundedCornerShape(12.dp)
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(vertical = 14.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    Text(text = "CONTRACTOR", fontSize = 24.sp, fontWeight = FontWeight.Medium)
+                    Text(text = "COMPLIANCE", fontSize = 18.sp, fontWeight = FontWeight.W300, color = colorResource(
+                        id = R.color.hellow_color
+                    ))
+
+                    Spacer(modifier = Modifier.width(26.dp))
+
+                    val dateFormated = date.convertDateToSpecificStringFormat()
+                    Text(text = dateFormated, fontSize = 20.sp, fontWeight = FontWeight.W300)
+
+
                 }
             }
         }
