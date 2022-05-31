@@ -9,7 +9,13 @@
 
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
+    <color name="grey_transparent">#D29F9D9D</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="ligth_red">#EE2424</color>
+    <color name="ligth_red">#FFB50000</color>
     <color name="ligth_red2">#D43C3C</color>
+    <color name="too_low_red">#F2C7C7</color>
+    <color name="too_low_red2">#FCFCFC</color>
+    <color name="hellow_color">#FF9800</color>
+
+
 </resources>
