@@ -5,9 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,8 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,6 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.biometric.biometricauth.R
 import com.biometric.biometricauth.convertDateToSpecificStringFormat
 import com.biometric.biometricauth.ui.theme.BiometricAuthTheme
@@ -73,6 +76,10 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier,
                                 scope = scope,
                                 state = bottomSheetScaffoldState,
+                                backgroundColor = colorResource(id = R.color.ligth_red2),
+                                date = Date(),
+                                imageUrl = "https://t4.ftcdn.net/jpg/03/36/26/53/360_F_336265345_U65QKmIeAmmpaPM2C1QaQKhDG7AxoMl9.jpg",
+                                "Frank Tchuisseu"
                             )
                         }
                     }
@@ -149,20 +156,22 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
+    @OptIn(ExperimentalMaterialApi::class, coil.annotation.ExperimentalCoilApi::class)
     @Composable
     fun MainScreen(
         modifier: Modifier = Modifier,
         scope: CoroutineScope,
         state: BottomSheetScaffoldState,
         backgroundColor: Color = colorResource(id = R.color.ligth_red2),
-        date: Date = Date()
+        date: Date = Date(),
+        imageUrl: String,
+        userName: String
     ) {
         Column(
             modifier
                 .fillMaxSize()
-                .background(color = backgroundColor),
-            verticalArrangement = Arrangement.Top,
+                .background(color = backgroundColor)
+                .verticalScroll(state = rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -173,16 +182,17 @@ class MainActivity : ComponentActivity() {
                     .padding(horizontal = 18.dp, vertical = 8.dp)
                     .background(
                         color = colorResource(
-                            id = R.color.ligth_red2_transparent
+                            id = R.color.white_too_transparent
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
                     .border(
-                        width = 0.5.dp,
-                        color = colorResource(id = R.color.too_low_red),
+                        width = 1.dp,
+                        color = colorResource(id = R.color.white_too_transparent),
                         shape = RoundedCornerShape(12.dp)
                     ),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 Column(
                     modifier = Modifier
@@ -191,18 +201,110 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                     Text(text = "CONTRACTOR", fontSize = 24.sp, fontWeight = FontWeight.Medium)
-                    Text(text = "COMPLIANCE", fontSize = 18.sp, fontWeight = FontWeight.W300, color = colorResource(
-                        id = R.color.hellow_color
-                    ))
+                    Text(
+                        text = "COMPLIANCE",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W300,
+                        color = colorResource(
+                            id = R.color.hellow_color
+                        )
+                    )
 
-                    Spacer(modifier = Modifier.width(26.dp))
+                    Spacer(modifier = Modifier.width(30.dp))
 
                     val dateFormated = date.convertDateToSpecificStringFormat()
-                    Text(text = dateFormated, fontSize = 20.sp, fontWeight = FontWeight.W300)
+                    Text(text = dateFormated, fontSize = 16.sp, fontWeight = FontWeight.W300)
+                    //Spacer(modifier = Modifier.width(18.dp))
+                    Image(
+                        painter = rememberImagePainter(data = imageUrl),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .padding(18.dp)
+                            .size(120.dp)
+                            .clip(
+                                CircleShape
+                            )
+                    )
 
+                    Text(
+                        text = "$userName",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.W300,
+                        color = Color.White
+                    )
 
                 }
+
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = colorResource(id = R.color.white_transparent))
+                            .padding(vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            modifier = Modifier
+                                .padding(horizontal = 20.dp)
+                                .size(50.dp),
+                            painter = painterResource(id = R.drawable.ic_no_svg),
+                            contentDescription = null
+                        )
+
+                            Text(
+                                text = "Not Compliant",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+
+
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = colorResource(id = R.color.white),
+                                shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
+                            )
+                            .padding(vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .padding(horizontal = 20.dp)
+                                .size(50.dp)
+                                .background(color = Color.Black, shape = RoundedCornerShape(8.dp))
+                                .padding(4.dp),
+                        ) {
+                            Text(
+                                modifier = Modifier.align(Alignment.Center),
+                                text = "S",
+                                color = Color.White,
+                                fontSize = 20.sp
+                            )
+                        }
+
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = "Toronto",
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "Say Yeah!",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.LightGray
+                            )
+                        }
+
+                    }
+                }
+
             }
+
         }
     }
 

@@ -11,6 +11,9 @@
     <color name="black">#FF000000</color>
     <color name="grey_transparent">#D29F9D9D</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_transparent">#20FFFFFF</color>
+    <color name="white_too_transparent">#0BFFFFFF</color>
+
     <color name="ligth_red">#FFB50000</color>
     <color name="ligth_red2">#D43C3C</color>
     <color name="too_low_red">#F2C7C7</color>
