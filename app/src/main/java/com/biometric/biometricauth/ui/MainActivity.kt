@@ -1,7 +1,10 @@
 package com.biometric.biometricauth.ui
 
+import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -11,8 +14,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,9 +35,14 @@ import coil.request.ImageRequest
 import com.biometric.biometricauth.R
 import com.biometric.biometricauth.convertDateToSpecificStringFormat
 import com.biometric.biometricauth.ui.theme.BiometricAuthTheme
+import com.google.accompanist.flowlayout.FlowColumn
+import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
 class MainActivity : ComponentActivity() {
 
@@ -91,6 +98,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun TopBar(isIconPinned: Boolean = true) {
         TopAppBar(
+            elevation = 0.dp,
             title = {
                 TopBarContaint(isIconPinned)
             },
@@ -165,7 +173,8 @@ class MainActivity : ComponentActivity() {
         backgroundColor: Color = colorResource(id = R.color.ligth_red2),
         date: Date = Date(),
         imageUrl: String,
-        userName: String
+        userName: String,
+        scaffoldState: ScaffoldState = rememberScaffoldState()
     ) {
         Column(
             modifier
@@ -175,82 +184,87 @@ class MainActivity : ComponentActivity() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.7F)
-                    .padding(horizontal = 18.dp, vertical = 8.dp)
-                    .background(
-                        color = colorResource(
-                            id = R.color.white_too_transparent
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                    .border(
-                        width = 1.dp,
-                        color = colorResource(id = R.color.white_too_transparent),
-                        shape = RoundedCornerShape(12.dp)
-                    ),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween,
             ) {
+
                 Column(
                     modifier = Modifier
-                        .padding(vertical = 14.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .fillMaxWidth()
+                        .padding(horizontal = 18.dp, vertical = 8.dp)
+                        .background(
+                            color = colorResource(
+                                id = R.color.white_too_transparent
+                            ),
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .border(
+                            width = 1.dp,
+                            color = colorResource(id = R.color.white_too_transparent),
+                            shape = RoundedCornerShape(12.dp)
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceBetween,
                 ) {
-
-                    Text(text = "CONTRACTOR", fontSize = 24.sp, fontWeight = FontWeight.Medium)
-                    Text(
-                        text = "COMPLIANCE",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.W300,
-                        color = colorResource(
-                            id = R.color.hellow_color
-                        )
-                    )
-
-                    Spacer(modifier = Modifier.width(30.dp))
-
-                    val dateFormated = date.convertDateToSpecificStringFormat()
-                    Text(text = dateFormated, fontSize = 16.sp, fontWeight = FontWeight.W300)
-                    //Spacer(modifier = Modifier.width(18.dp))
-                    Image(
-                        painter = rememberImagePainter(data = imageUrl),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
+                    Column(
                         modifier = Modifier
-                            .padding(18.dp)
-                            .size(120.dp)
-                            .clip(
-                                CircleShape
-                            )
-                    )
-
-                    Text(
-                        text = "$userName",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.W300,
-                        color = Color.White
-                    )
-
-                }
-
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(color = colorResource(id = R.color.white_transparent))
-                            .padding(vertical = 10.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .padding(vertical = 14.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Image(
-                            modifier = Modifier
-                                .padding(horizontal = 20.dp)
-                                .size(50.dp),
-                            painter = painterResource(id = R.drawable.ic_no_svg),
-                            contentDescription = null
+
+                        Text(text = "CONTRACTOR", fontSize = 24.sp, fontWeight = FontWeight.Medium)
+                        Text(
+                            text = "COMPLIANCE",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.W300,
+                            color = colorResource(
+                                id = R.color.hellow_color
+                            )
                         )
+
+                        Spacer(modifier = Modifier.width(30.dp))
+
+                        val dateFormated = date.convertDateToSpecificStringFormat()
+                        Text(text = dateFormated, fontSize = 16.sp, fontWeight = FontWeight.W300)
+                        //Spacer(modifier = Modifier.width(18.dp))
+                        Image(
+                            painter = rememberImagePainter(data = imageUrl),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .padding(18.dp)
+                                .size(120.dp)
+                                .clip(
+                                    CircleShape
+                                )
+                        )
+
+                        Text(
+                            text = "$userName",
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.W300,
+                            color = Color.White
+                        )
+
+                    }
+
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(color = colorResource(id = R.color.white_transparent))
+                                .padding(vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                modifier = Modifier
+                                    .padding(horizontal = 20.dp)
+                                    .size(50.dp),
+                                painter = painterResource(id = R.drawable.ic_no_svg),
+                                contentDescription = null
+                            )
 
                             Text(
                                 text = "Not Compliant",
@@ -259,52 +273,88 @@ class MainActivity : ComponentActivity() {
                             )
 
 
-                    }
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = colorResource(id = R.color.white),
-                                shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
-                            )
-                            .padding(vertical = 10.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
+                        }
+                        Row(
                             modifier = Modifier
-                                .padding(horizontal = 20.dp)
-                                .size(50.dp)
-                                .background(color = Color.Black, shape = RoundedCornerShape(8.dp))
-                                .padding(4.dp),
+                                .fillMaxWidth()
+                                .background(
+                                    color = colorResource(id = R.color.white),
+                                    shape = RoundedCornerShape(
+                                        bottomStart = 12.dp,
+                                        bottomEnd = 12.dp
+                                    )
+                                )
+                                .padding(vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                modifier = Modifier.align(Alignment.Center),
-                                text = "S",
-                                color = Color.White,
-                                fontSize = 20.sp
-                            )
-                        }
+                            Box(
+                                modifier = Modifier
+                                    .padding(horizontal = 20.dp)
+                                    .size(50.dp)
+                                    .background(
+                                        color = Color.Black,
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                                    .padding(4.dp),
+                            ) {
+                                Text(
+                                    modifier = Modifier.align(Alignment.Center),
+                                    text = "S",
+                                    color = Color.White,
+                                    fontSize = 20.sp
+                                )
+                            }
 
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = "Toronto",
-                                fontSize = 22.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black
-                            )
-                            Text(
-                                text = "Say Yeah!",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.LightGray
-                            )
-                        }
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(
+                                    text = "Toronto",
+                                    fontSize = 22.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black
+                                )
+                                Text(
+                                    text = "Say Yeah!",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.LightGray
+                                )
+                            }
 
+                        }
                     }
+
                 }
 
-            }
 
+                val iconList = mutableListOf<IconObject>()
+
+                LaunchedEffect(scaffoldState.snackbarHostState ){
+                    (0..41).forEach { count ->
+                        iconList.add(IconObject(position = count))
+                    }
+                }
+                var randomIndex by remember { mutableStateOf(0) }
+
+                FlowRow(modifier = Modifier.matchParentSize(), crossAxisSpacing = 30.dp) {
+                    iconList.forEach { iconItem ->
+                        Icon(
+                            modifier = Modifier
+                                .padding(start = 12.dp, end = 12.dp)
+                                .size(24.dp),
+                            painter = if (iconItem.position != randomIndex) {
+                                painterResource(id = R.drawable.ic_no_svg_with_tranparence)
+                            } else {
+                                painterResource(id = R.drawable.ic_no_svg)
+                            },
+                            contentDescription = null
+                        )
+                    }
+                }
+                Handler(Looper.getMainLooper()).postDelayed({
+                    randomIndex = (0..iconList.size).random()
+                }, 1000)
+
+            }
         }
     }
 
