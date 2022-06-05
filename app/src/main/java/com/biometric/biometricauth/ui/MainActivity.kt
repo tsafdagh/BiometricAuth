@@ -4,19 +4,21 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -59,22 +61,19 @@ fun ViewContent(viewModel: AuthenticationViewModel) {
         color = MaterialTheme.colors.background
     ) {
 
-        //val questionList by viewModel.questionListLiveData.observeA
-        val textContent =
-            "Hello <b>World</b>. This <i><strike>text</strike>sentence</i> is form<b>att<u>ed</u></b> in simple html. <a href=\"https://github.com/ch4rl3x/HtmlText\">HtmlText</a>"
-        Column() {
-            val radioOptions = listOf("DSA", "Java", "C++")
-            var selectedOption by remember { mutableStateOf("") }
+        val questionList by viewModel.questionListLiveData.observeAsState(mutableListOf())
 
-            SimpleRadioButtonComponent(
-                question = textContent,
-                radioOptions,
-                selectedOption,
-                onOptionSelected = { it ->
-                    selectedOption = it
-                })
+        Column(modifier = Modifier
+            .padding(top = 12.dp)
+            .verticalScroll(rememberScrollState())) {
+
+            questionList.forEach { question ->
+
+                QuestionSection(
+                    question = question,
+                   viewModel = viewModel)
+            }
         }
-
     }
 }
 
@@ -90,21 +89,22 @@ fun HtmlText(modifier: Modifier = Modifier, contenText: String) {
 }
 
 @Composable
-fun SimpleRadioButtonComponent(
-    question: String,
-    radioOptions: List<String>,
-    selectedOption: String,
-    onOptionSelected: (String) -> Unit
+fun QuestionSection(
+    question: Question,
+    viewModel: AuthenticationViewModel
 ) {
+
+    val radioOptions = question.options.map { it.value }
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .fillMaxWidth()
-            .fillMaxHeight(),
+            .padding(horizontal = 16.dp, vertical = 18.dp)
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        HtmlText(contenText = question)
+        HtmlText(contenText = question.question)
         Column(modifier = Modifier.padding(top = 12.dp)) {
             radioOptions.forEachIndexed { index, text ->
 
@@ -119,13 +119,17 @@ fun SimpleRadioButtonComponent(
                         RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 0.dp)
                     }
                 }
+
                 Row(
                     Modifier
                         .padding(top = 1.dp)
                         .fillMaxWidth()
                         .selectable(
                             selected = (text == selectedOption),
-                            onClick = { onOptionSelected(text) }
+                            onClick = {
+                                onOptionSelected(text)
+                                viewModel.setSelection(questionId = question.id, answer = text)
+                            }
                         )
                         .background(
                             color = androidx.compose.ui.graphics.Color.DarkGray,
@@ -139,9 +143,8 @@ fun SimpleRadioButtonComponent(
                         selected = (text == selectedOption),
                         modifier = Modifier.padding(all = Dp(value = 6F)),
                         onClick = {
-
+                            viewModel.setSelection(questionId = question.id, answer = text)
                             onOptionSelected(text)
-                            Toast.makeText(context, text, Toast.LENGTH_LONG).show()
                         }
                     )
                     Text(
@@ -158,7 +161,7 @@ fun SimpleRadioButtonComponent(
 @Composable
 fun DefaultPreview() {
     BiometricAuthTheme {
-
+        val viewModel: AuthenticationViewModel = viewModel()
         ViewContent(viewModel)
     }
 }
