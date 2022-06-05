@@ -11,6 +11,7 @@ import android.os.CancellationSignal
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.biometric.biometricauth.R
@@ -23,176 +24,35 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AuthenticationViewModel : ViewModel() {
 
-    val uiState = MutableStateFlow(AuthenticationState())
+    val questionListLiveData = MutableLiveData<List<Question>>()
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    fun handleEvent(authenticationEven: AuthenticationEvent) {
-        when (authenticationEven) {
-            is AuthenticationEvent.ToggleAuthenticationMode -> {
-                toggleAuthenticationMode()
-            }
-            is AuthenticationEvent.EmailChanged -> {
-                updateEmail(authenticationEven.emailAddress)
-            }
-            is AuthenticationEvent.PasswordChanged -> {
-                updatePassword(authenticationEven.password)
-            }
-            is AuthenticationEvent.Authenticate -> {
-                authenticate()
-            }
-            is AuthenticationEvent.ErrorDismissed -> {
-                dismissError()
-            }
-            is AuthenticationEvent.UseBiometricAuth ->{
-                launchBiometric(application =authenticationEven.application )
-            }
-        }
-    }
+    fun mockDate() {
+        val textContent =
+            "Hello <b>World</b>. This <i><strike>text</strike>sentence</i> is form<b>att<u>ed</u></b> in simple html. <a href=\"https://github.com/ch4rl3x/HtmlText\">HtmlText</a>"
 
-
-    private fun toggleAuthenticationMode() {
-        val authenticationMode = uiState.value.authenticationMode
-
-        val newAuthenticationMode = if (authenticationMode == AuthenticationMode.SIGN_IN) {
-            AuthenticationMode.SIGN_UP
-        } else {
-            AuthenticationMode.SIGN_IN
-        }
-        uiState.value = uiState.value.copy(authenticationMode = newAuthenticationMode)
-    }
-
-    private fun updateEmail(email: String) {
-        uiState.value = uiState.value.copy(email = email)
-    }
-
-    private fun updatePassword(password: String) {
-        val requirements = mutableListOf<PasswordRequirements>()
-        if (password.length > 7) {
-            requirements.add(PasswordRequirements.EIGHT_CHARACTERS)
-        }
-        if (password.any { it.isUpperCase() }) {
-            requirements.add(PasswordRequirements.CAPITAL_LETTER)
-        }
-        if (password.any { it.isDigit() }) {
-            requirements.add(PasswordRequirements.NUMBER)
-        }
-        uiState.value = uiState.value.copy(
-            password = password,
-            passwordRequirements = requirements.toList()
-        )
-    }
-
-    private fun authenticate(){
-        uiState.value = uiState.value.copy(isLoading = true)
-        viewModelScope.launch(Dispatchers.IO) {
-            delay(2000L)
-
-            withContext(Dispatchers.Main) {
-                uiState.value = uiState.value.copy(
-                    isLoading = false,
-                    error = "Something went wrong!"
-                )
-            }
-        }
-    }
-
-    private fun dismissError() {
-        uiState.value = uiState.value.copy(
-            error = null
-        )
-    }
-
-    private var cancellationSignal: CancellationSignal? = null
-
-    private val authentificationCallback: BiometricPrompt.AuthenticationCallback =
-        @RequiresApi(Build.VERSION_CODES.P)
-        object : BiometricPrompt.AuthenticationCallback() {
-
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult?) {
-                super.onAuthenticationSucceeded(result)
-
-                uiState.value = uiState.value.copy(
-                    isLoading = false,
-                    error = "Authentication Succeeded!"
-                )
-            }
-
-            override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
-                super.onAuthenticationError(errorCode, errString)
-
-                uiState.value = uiState.value.copy(
-                    isLoading = false,
-                    error = "Authentication error code: $errorCode"
-                )
-            }
-
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-            }
-
-            override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
-                super.onAuthenticationHelp(helpCode, helpString)
-            }
-        }
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun checkBiometricSupport(application:Application): Boolean {
-
-        val keyGuardManager = application.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-
-        if (!keyGuardManager.isDeviceSecure) {
-            return true
-        }
-
-        if (ActivityCompat.checkSelfPermission(
-                application,
-                Manifest.permission.USE_BIOMETRIC
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return false
-        }
-
-        return application.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.Q)
-    private fun launchBiometric(application: Application) {
-        if (checkBiometricSupport(application)) {
-            val biometricPrompt = BiometricPrompt.Builder(application)
-                .apply {
-                    setTitle(application.getString(R.string.prompt_info_title))
-                    setSubtitle(application.getString(R.string.prompt_info_subtitle))
-                    setDescription(application.getString(R.string.prompt_info_description))
-                    setConfirmationRequired(true)
-                    setNegativeButton(
-                        application.getString(R.string.prompt_info_use_app_password),
-                        application.mainExecutor
-                    ) { _, _ ->
-                        Toast.makeText(
-                            application,
-                            "Biometric authentication cancelled",
-                            Toast.LENGTH_SHORT
-                        ).show()
+        val questions = mutableListOf<Question>()
+        (0..7).forEach {
+            val optionList = mutableListOf<OptionEntity>()
+            (0..(2..6).random()).forEach {
+                val option = OptionEntity(
+                    locale = UUID.randomUUID().toString(), value = if (it % 2 == 0) {
+                        "That is true"
+                    } else {
+                        "That is false"
                     }
-                }.build()
+                )
+                optionList.add(option)
+            }
 
-
-            biometricPrompt.authenticate(
-                getCancellationSignal(application),
-                application.mainExecutor,
-                authentificationCallback
-            )
+            val question = Question(id = UUID.randomUUID().toString(), question = textContent, options = optionList as ArrayList<OptionEntity>)
+            questions.add(question)
         }
-    }
 
-    private fun getCancellationSignal(application:Application): CancellationSignal {
-        cancellationSignal = CancellationSignal()
-        cancellationSignal?.setOnCancelListener {
-            Toast.makeText(application, "Authentication called signal", Toast.LENGTH_SHORT).show()
-        }
-        return cancellationSignal as CancellationSignal
+        questionListLiveData.value = questions
     }
 }
