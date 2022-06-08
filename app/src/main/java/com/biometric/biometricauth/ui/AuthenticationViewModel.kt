@@ -37,7 +37,8 @@ class AuthenticationViewModel : ViewModel() {
                 optionList.add(option)
             }
 
-            val question = Question(id = UUID.randomUUID().toString(), question = textContent, options = optionList as ArrayList<OptionEntity>)
+            val question = Question(id = UUID.randomUUID().toString(), name = QuestionName(locale = UUID.randomUUID().toString(), value = textContent),
+                options = optionList as ArrayList<OptionEntity>)
             questions.add(question)
         }
 
