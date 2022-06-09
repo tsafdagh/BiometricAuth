@@ -24,31 +24,20 @@ import java.util.*
 @Composable
 fun SelectDateButton(modifier: Modifier = Modifier, onDateSelected: (date: Date) -> Unit) {
 
-    // Fetching the Local Context
     val mContext = LocalContext.current
-
-    // Declaring integer values
-    // for year, month and day
     val mYear: Int
     val mMonth: Int
     val mDay: Int
 
-    // Initializing a Calendar
     val mCalendar = Calendar.getInstance()
 
-    // Fetching current year, month and day
     mYear = mCalendar.get(Calendar.YEAR)
     mMonth = mCalendar.get(Calendar.MONTH)
     mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
 
     mCalendar.time = Date()
-
-    // Declaring a string value to
-    // store date in string format
     val mDate = remember { mutableStateOf("") }
 
-    // Declaring DatePickerDialog and setting
-    // initial values as current values (present year, month and day)
     val mDatePickerDialog = DatePickerDialog(
         mContext,
 

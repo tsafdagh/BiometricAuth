@@ -159,19 +159,52 @@ fun MyMainFrom(
             )
         }
 
-        Row(
+        Column(
             modifier = Modifier
                 .padding(top = 14.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-
+                .fillMaxWidth()
         ) {
-            LabelText(text = "Date")
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                SelectDateButton(onDateSelected = {})
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                LabelText(text = "Date")
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    SelectDateButton(onDateSelected = {})
+                    RequirementBox(modifier = Modifier.padding(start = 12.dp))
+                }
+            }
+            LabelText(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
+                text = "Opens a date picked?",
+                textSize = 12.sp
+            )
+        }
+
+
+        Column(
+            modifier = Modifier
+                .padding(top = 14.dp)
+                .fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                CheckBoxComponent(textLabel = "Checkbox", onCheckboxSelected = {})
                 RequirementBox(modifier = Modifier.padding(start = 12.dp))
             }
+            LabelText(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
+                text = "Checkbox",
+                textSize = 12.sp
+            )
         }
     }
 }
