@@ -36,9 +36,7 @@ import com.biometric.biometricauth.R
 import com.biometric.biometricauth.ui.components.*
 import com.biometric.biometricauth.ui.enums.AuthenticationMode
 import com.biometric.biometricauth.ui.enums.PasswordRequirements
-import com.biometric.biometricauth.ui.formComponents.FirsTextInput
-import com.biometric.biometricauth.ui.formComponents.LabelText
-import com.biometric.biometricauth.ui.formComponents.LabelWithRequirement
+import com.biometric.biometricauth.ui.formComponents.*
 import com.biometric.biometricauth.ui.formEvens.MyFormState
 import com.biometric.biometricauth.ui.stateEvents.AuthenticationEvent
 import com.biometric.biometricauth.ui.theme.BiometricAuthTheme
@@ -91,9 +89,75 @@ fun MyMainFrom(
             .verticalScroll(rememberScrollState())
             .background(color = Color.Black)
     ) {
+
         MainLabelWithDescription()
-        LabelWithRequirement(modifier = Modifier.padding(top = 14.dp), labelText = "Text")
-        FirsTextInput(onTextChanged = {  },onNextClicked = {},text = "")
+
+        Column(
+            modifier = Modifier
+                .padding(top = 14.dp)
+                .fillMaxWidth()
+        ) {
+            LabelWithRequiredBox(labelText = "Text")
+            FirsTextInput(
+                modifier = Modifier
+                    .padding(top = 6.dp)
+                    .fillMaxWidth(),
+                onTextChanged = { },
+                onNextClicked = {},
+                text = ""
+            )
+            LabelText(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
+                text = "This is a text field. Field can be required -- this one is.",
+                textSize = 12.sp
+            )
+        }
+        Column(
+            modifier = Modifier
+                .padding(top = 14.dp)
+                .fillMaxWidth()
+        ) {
+            LabelWithRequiredBox(labelText = "TextArea")
+            InputTextArea(
+                modifier = Modifier
+                    .padding(top = 6.dp)
+                    .fillMaxWidth(),
+                onTextValueChanged = { },
+                onNextClicked = {},
+                text = ""
+            )
+            LabelText(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
+                text = "Text -- but on steroids",
+                textSize = 12.sp
+            )
+        }
+        Column(
+            modifier = Modifier
+                .padding(top = 14.dp)
+                .fillMaxWidth()
+        ) {
+            LabelWithRequiredBox(labelText = "Numeric")
+            NumericFieldInput(
+                modifier = Modifier
+                    .padding(top = 6.dp)
+                    .fillMaxWidth(),
+                onTextChanged = { },
+                onNextClicked = {},
+                text = ""
+            )
+            LabelText(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
+                text = "Numeric field can have validations and masks applied...",
+                textSize = 12.sp
+            )
+        }
     }
 }
 
