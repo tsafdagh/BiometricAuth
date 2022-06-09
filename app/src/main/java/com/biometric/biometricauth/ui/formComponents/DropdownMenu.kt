@@ -52,11 +52,11 @@ fun DropdownMenuComponent(modifier: Modifier = Modifier,items:List<String>, onIt
             DropdownMenu(
                 expanded = expanded.value,
                 onDismissRequest = { expanded.value = false },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .background(Color.DarkGray)
                     .border(BorderStroke(width = 1.dp, color = Color.Black))
-                    .shadow(elevation = 2.dp)
-                    .width(200.dp),
+                    .shadow(elevation = 2.dp),
             ) {
                 items.forEachIndexed { index, s ->
                     DropdownMenuItem(onClick = {
