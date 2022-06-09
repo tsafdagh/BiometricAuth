@@ -32,15 +32,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.biometric.biometricauth.BuildCard2
 import com.biometric.biometricauth.R
 import com.biometric.biometricauth.ui.components.*
 import com.biometric.biometricauth.ui.enums.AuthenticationMode
 import com.biometric.biometricauth.ui.enums.PasswordRequirements
+import com.biometric.biometricauth.ui.formComponents.FirsTextInput
+import com.biometric.biometricauth.ui.formComponents.LabelText
+import com.biometric.biometricauth.ui.formComponents.LabelWithRequirement
+import com.biometric.biometricauth.ui.formEvens.MyFormState
 import com.biometric.biometricauth.ui.stateEvents.AuthenticationEvent
 import com.biometric.biometricauth.ui.theme.BiometricAuthTheme
 import com.biometric.biometricauth.ui.theme.Purple500
-import com.biometric.biometricauth.ui.uiStates.AuthenticationState
+import java.util.*
 
 class MainActivity : ComponentActivity() {
 
@@ -61,91 +64,77 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
 
-                    AuthenticationContent(
+                    MyMainFrom(
                         modifier = Modifier.fillMaxWidth(),
-                        authenticationState = viewModel.uiState.collectAsState().value,
-                        application= application,
+                        formState = viewModel.uiFormState.collectAsState().value,
+                        application = application,
                         handleEvent = viewModel::handleEvent
                     )
-                    /*        BioMetricScreen(onClick = {
-                                lauchBiometric()
-                            })*/
                 }
             }
         }
     }
-
 }
-
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AuthenticationContent(
+fun MyMainFrom(
     modifier: Modifier = Modifier,
-    authenticationState: AuthenticationState,
+    formState: MyFormState,
     application: Application,
     handleEvent: (event: AuthenticationEvent) -> Unit
 ) {
 
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 12.dp, vertical = 12.dp)
+            .verticalScroll(rememberScrollState())
+            .background(color = Color.Black)
     ) {
-
-        BuildCard2(resources = application.resources)
-        if (authenticationState.isLoading) {
-            CircularProgressIndicator()
-        } else {
-            AuthenticationForm(
-                modifier = Modifier.fillMaxSize(),
-                email = authenticationState.email,
-                password = authenticationState.password,
-                completedPasswordRequirements =
-                authenticationState.passwordRequirements,
-                authenticationMode =
-                authenticationState.authenticationMode,
-                enableAuthentication =
-                authenticationState.isFormValid(),
-                onEmailChanged = {
-                    handleEvent(
-                        AuthenticationEvent.EmailChanged(it)
-                    )
-                },
-                onPasswordChanged = {
-                    handleEvent(
-                        AuthenticationEvent
-                            .PasswordChanged(it)
-                    )
-                },
-                onAuthenticate = {
-                    handleEvent(
-                        AuthenticationEvent.Authenticate
-                    )
-                },
-                onToggleMode = {
-                    handleEvent(
-                        AuthenticationEvent
-                            .ToggleAuthenticationMode
-                    )
-                },
-                onBiometricAuthUsed = {
-                    handleEvent(
-                        AuthenticationEvent.UseBiometricAuth(application =application )
-                    )
-                }
-            )
-            authenticationState.error?.let { error ->
-                AuthenticationErrorDialog(
-                    error = error,
-                    dismissError = {
-                        handleEvent(
-                            AuthenticationEvent.ErrorDismissed
-                        )
-                    }
-                )
-            }
-        }
+        MainLabelWithDescription()
+        LabelWithRequirement(modifier = Modifier.padding(top = 14.dp), labelText = "Text")
+        FirsTextInput(onTextChanged = {  },onNextClicked = {},text = "")
     }
+}
+
+@Composable
+fun MainLabelWithDescription(modifier: Modifier = Modifier) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        LabelText(text = "Label")
+        LabelText(
+            modifier = Modifier.padding(top = 8.dp),
+            text = "This is a label control",
+            textSize = 12.sp
+        )
+
+    }
+}
+
+@Composable
+fun MyMainFormContent(
+    modifier: Modifier = Modifier,
+    firstText: String,
+    textArea: String,
+    numericValue: Double,
+    date: Date,
+    isCheckBoxSelected: Boolean,
+    textControl: String,
+    textArea2: String,
+    numericPhone: String,
+    noDescriptionNumeric: String,
+    numericPhone2: String,
+    onFirstTextChanged: (text: String) -> Unit,
+    onTextAreaChanged: (text: String) -> Unit,
+    onNumericValueChanged: (number: Double) -> Unit,
+    onDateValueChanged: (date: Date) -> Unit,
+    onCheckBoxSelected: (isSelect: Boolean) -> Unit,
+    onTextControlChanged: (text: String) -> Unit,
+    onTextArea2Changed: (text: String) -> Unit,
+    onNumericPhoneChanged: (phone: String) -> Unit,
+    onDescriptionNumericChanged: (text: String) -> Unit,
+    onNumericPhone2Changed: (text: String) -> Unit
+) {
+
 }
 
 
@@ -162,7 +151,6 @@ fun AuthenticationForm(
     onPasswordChanged: (password: String) -> Unit,
     onToggleMode: () -> Unit,
     onAuthenticate: () -> Unit,
-    onBiometricAuthUsed:() ->Unit
 ) {
 
     Spacer(modifier = Modifier.height(40.dp))
@@ -191,10 +179,6 @@ fun AuthenticationForm(
             onDoneClicked = onAuthenticate
         )
         Spacer(modifier = Modifier.height(12.dp))
-
-        if(authenticationMode == AuthenticationMode.SIGN_IN){
-            BiometricAuthSwitcher(modifier = Modifier.fillMaxWidth(), onBiometricAuthUsed)
-        }
 
         AnimatedVisibility(
             visible = authenticationMode ==
@@ -308,7 +292,7 @@ fun BioMetricScreen(onClick: () -> Unit) {
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.password_eye),
-                               contentDescription = "password eye",
+                                contentDescription = "password eye",
                                 tint = if (passwordVisibility.value) Purple500 else Color.Gray
                             )
                         }

@@ -16,6 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.biometric.biometricauth.R
 import com.biometric.biometricauth.ui.enums.AuthenticationMode
 import com.biometric.biometricauth.ui.enums.PasswordRequirements
+import com.biometric.biometricauth.ui.formEvens.MyFormState
 import com.biometric.biometricauth.ui.stateEvents.AuthenticationEvent
 import com.biometric.biometricauth.ui.uiStates.AuthenticationState
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +28,7 @@ import kotlinx.coroutines.withContext
 class AuthenticationViewModel : ViewModel() {
 
     val uiState = MutableStateFlow(AuthenticationState())
+    val uiFormState = MutableStateFlow(MyFormState())
 
     @RequiresApi(Build.VERSION_CODES.Q)
     fun handleEvent(authenticationEven: AuthenticationEvent) {
