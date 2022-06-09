@@ -206,6 +206,43 @@ fun MyMainFrom(
                 textSize = 12.sp
             )
         }
+
+
+        Column(
+            modifier = Modifier
+                .padding(top = 14.dp)
+                .fillMaxWidth()
+        ) {
+            LabelWithRequiredBox(labelText = "Lorem ipsum is placeholder text commonly used in the graphic.")
+            RadioComponent(radioOptions = listOf("true", "false"), onRadioOptionSelected = {})
+            LabelText(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
+                text = "Numeric field can have validations and masks applied...",
+                textSize = 12.sp
+            )
+        }
+
+
+        Column(
+            modifier = Modifier
+                .padding(top = 14.dp)
+                .fillMaxWidth()
+        ) {
+            LabelWithRequiredBox(labelText = "Dropdown field")
+
+            val items = listOf("Gorgia", "Florida", "Hawail", "Connecticust", "Alamba", "Dalawar")
+            DropdownMenuComponent(modifier = Modifier.padding(top = 8.dp), items = items, onItemSelected = {})
+            LabelText(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
+                text = "This is the dropdown description",
+                textSize = 12.sp
+            )
+        }
+
     }
 }
 
