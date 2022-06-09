@@ -158,6 +158,21 @@ fun MyMainFrom(
                 textSize = 12.sp
             )
         }
+
+        Row(
+            modifier = Modifier
+                .padding(top = 14.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+
+        ) {
+            LabelText(text = "Date")
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                SelectDateButton(onDateSelected = {})
+                RequirementBox(modifier = Modifier.padding(start = 12.dp))
+            }
+        }
     }
 }
 
