@@ -195,7 +195,7 @@ fun MyMainFrom(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                CheckBoxComponent(textLabel = "Checkbox", onCheckboxSelected = {})
+                CheckBoxComponent(textLabel = "Checkbox", onCheckboxStatusChanged = {})
                 RequirementBox(modifier = Modifier.padding(start = 12.dp))
             }
             LabelText(
@@ -224,7 +224,6 @@ fun MyMainFrom(
             )
         }
 
-
         Column(
             modifier = Modifier
                 .padding(top = 14.dp)
@@ -233,7 +232,10 @@ fun MyMainFrom(
             LabelWithRequiredBox(labelText = "Dropdown field")
 
             val items = listOf("Gorgia", "Florida", "Hawail", "Connecticust", "Alamba", "Dalawar")
-            DropdownMenuComponent(modifier = Modifier.padding(top = 8.dp), items = items, onItemSelected = {})
+            DropdownMenuComponent(
+                modifier = Modifier.padding(top = 8.dp),
+                items = items,
+                onItemSelected = {})
             LabelText(
                 modifier = Modifier
                     .padding(top = 8.dp)
@@ -243,6 +245,71 @@ fun MyMainFrom(
             )
         }
 
+
+        Column(
+            modifier = Modifier
+                .padding(top = 14.dp)
+                .fillMaxWidth()
+        ) {
+
+            CheckBoxComponent(textLabel = "Checkbox label", onCheckboxStatusChanged = {
+            })
+            LabelText(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
+                text = "Checkbox",
+                textSize = 12.sp
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .padding(top = 14.dp)
+                .fillMaxWidth()
+        ) {
+            LabelText(text =  "Text control")
+            FirsTextInput(
+                modifier = Modifier
+                    .padding(top = 6.dp)
+                    .fillMaxWidth(),
+                onTextChanged = { },
+                onNextClicked = {},
+                text = ""
+            )
+            LabelText(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
+                text = "This is the text description without the required label. So is not required for the user!.",
+                textSize = 12.sp
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .padding(top = 14.dp)
+                .fillMaxWidth()
+        ) {
+            LabelText(text = "text area")
+            InputTextArea(
+                modifier = Modifier
+                    .padding(top = 6.dp)
+                    .fillMaxWidth(),
+                onTextValueChanged = { },
+                onNextClicked = {},
+                text = ""
+            )
+            LabelText(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
+                text = "Text area description",
+                textSize = 12.sp
+            )
+        }
+
+        PhoneNumberPickerComponent(modifier =Modifier.fillMaxWidth())
     }
 }
 
