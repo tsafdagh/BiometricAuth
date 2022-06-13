@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -13,10 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -69,18 +67,32 @@ fun ViewContent(viewModel: AuthenticationViewModel) {
 
         val questionList by viewModel.questionListLiveData.observeAsState(mutableListOf())
 
+        val canEnableSendResponse by viewModel.isBtnEnabled.observeAsState(false)
+
         Column(
             modifier = Modifier
                 .padding(top = 12.dp)
                 .verticalScroll(rememberScrollState())
         ) {
 
-            questionList.forEach { question ->
+            questionList.forEachIndexed{questionIndex, question ->
 
                 QuestionSection(
                     question = question,
-                    viewModel = viewModel
+                    viewModel = viewModel,
+                    questionIndex=questionIndex,
+                    listSize = questionList.size
                 )
+            }
+            val context = LocalContext.current
+            Button(enabled = canEnableSendResponse, onClick = {
+                Toast.makeText(context
+                   ,
+                    "Button Clicked",
+                    Toast.LENGTH_SHORT
+                ).show()}) {
+
+                Text(text = "Submit")
             }
         }
     }
@@ -100,7 +112,9 @@ fun HtmlText(modifier: Modifier = Modifier, contenText: String) {
 @Composable
 fun QuestionSection(
     question: Question,
-    viewModel: AuthenticationViewModel
+    viewModel: AuthenticationViewModel,
+    listSize: Int,
+    questionIndex:Int
 ) {
 
     val radioOptions = question.options.map { it.value }
@@ -137,7 +151,12 @@ fun QuestionSection(
                             selected = (text == selectedOption),
                             onClick = {
                                 onOptionSelected(text)
-                                viewModel.setSelection(questionId = question.id, answer = text)
+                                viewModel.setSelection(
+                                    questionId = question.id,
+                                    answer = text,
+                                    questionIndex = questionIndex,
+                                    listSize
+                                )
                             }
                         )
                         .background(
@@ -147,12 +166,11 @@ fun QuestionSection(
                         .padding(horizontal = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val context = LocalContext.current
                     RadioButton(
                         selected = (text == selectedOption),
                         modifier = Modifier.padding(all = Dp(value = 6F)),
                         onClick = {
-                            viewModel.setSelection(questionId = question.id, answer = text)
+                            viewModel.setSelection(questionId = question.id, answer = text, questionIndex=questionIndex, listSize)
                             onOptionSelected(text)
                         }
                     )
