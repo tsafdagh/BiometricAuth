@@ -15,13 +15,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CheckBoxComponent(textLabel: String, onCheckboxStatusChanged: (isChecked:Boolean) -> Unit) {
+fun CheckBoxComponent(textLabel: String, isChecked:Boolean, onCheckboxStatusChanged: (isChecked:Boolean) -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        val isChecked = remember { mutableStateOf(true) }
         Checkbox(
-            checked = isChecked.value,
+            checked = isChecked,
             onCheckedChange = {
-                isChecked.value = it
                 onCheckboxStatusChanged(it)
             },
             colors = CheckboxDefaults.colors(Color.Green)

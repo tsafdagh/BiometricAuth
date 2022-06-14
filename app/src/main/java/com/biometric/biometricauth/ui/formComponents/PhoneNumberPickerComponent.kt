@@ -12,11 +12,10 @@ import com.togitech.ccp.data.utils.getDefaultPhoneCode
 import com.togitech.ccp.data.utils.getLibCountries
 
 @Composable
-fun PhoneNumberPickerComponent(modifier: Modifier= Modifier) {
+fun PhoneNumberPickerComponent(phoneNumber: String, modifier: Modifier= Modifier, onPhoneNumberEdited:(phone:String) ->Unit) {
     val getDefaultLangCode = getDefaultLangCode() // Auto detect language
     val getDefaultPhoneCode = getDefaultPhoneCode() // Auto detect phone code : +90
     var phoneCode by rememberSaveable { mutableStateOf(getDefaultPhoneCode) }
-    val phoneNumber = rememberSaveable { mutableStateOf("") }
     var defaultLang by rememberSaveable { mutableStateOf(getDefaultLangCode) }
     var verifyText by remember { mutableStateOf("") }
     var isValidPhone by remember { mutableStateOf(true) }
@@ -33,13 +32,13 @@ fun PhoneNumberPickerComponent(modifier: Modifier= Modifier) {
         dialogAppBarTextColor = Color.Black,
         dialogAppBarColor = Color.White,
         error = isValidPhone,
-        text = phoneNumber.value,
-        onValueChange = { phoneNumber.value = it }
+        text = phoneNumber,
+        onValueChange = { onPhoneNumberEdited(it) }
     )
 
-    val fullPhoneNumber = "$phoneCode${phoneNumber.value}"
+    val fullPhoneNumber = "$phoneCode${phoneNumber}"
     val checkPhoneNumber = checkPhoneNumber(
-        phone = phoneNumber.value,
+        phone = phoneNumber,
         fullPhoneNumber = fullPhoneNumber,
         countryCode = defaultLang
     )

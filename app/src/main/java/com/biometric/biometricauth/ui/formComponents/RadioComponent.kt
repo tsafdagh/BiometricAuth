@@ -1,7 +1,10 @@
 package com.biometric.biometricauth.ui.formComponents
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.RadioButton
@@ -12,12 +15,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun RadioComponent(modifier: Modifier = Modifier,radioOptions: List<String>, onRadioOptionSelected: (option: String) -> Unit) {
+fun RadioComponent(modifier: Modifier = Modifier,radioOptions: List<String>, onRadioOptionSelected: (option: Boolean) -> Unit) {
 
     val (selectedOption, onOptionSelected) = remember { mutableStateOf("") }
 
@@ -44,7 +46,7 @@ fun RadioComponent(modifier: Modifier = Modifier,radioOptions: List<String>, onR
                         selected = (text == selectedOption),
                         onClick = {
                             onOptionSelected(text)
-                            onRadioOptionSelected(text)
+                            onRadioOptionSelected(text=="true")
                         }
                     )
                     .background(
@@ -59,7 +61,7 @@ fun RadioComponent(modifier: Modifier = Modifier,radioOptions: List<String>, onR
                     modifier = Modifier.padding(all = Dp(value = 6F)),
                     onClick = {
                         onOptionSelected(text)
-                        onRadioOptionSelected(text)
+                        onRadioOptionSelected(text=="true")
                     }
                 )
                 Text(

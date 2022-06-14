@@ -92,295 +92,34 @@ fun MyMainFrom(
 
         MainLabelWithDescription()
 
-        Column(
-            modifier = Modifier
-                .padding(top = 14.dp)
-                .fillMaxWidth()
-        ) {
-            LabelWithRequiredBox(labelText = "Text")
-            FirsTextInput(
-                modifier = Modifier
-                    .padding(top = 6.dp)
-                    .fillMaxWidth(),
-                onTextChanged = { },
-                onNextClicked = {},
-                text = ""
-            )
-            LabelText(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth(),
-                text = "This is a text field. Field can be required -- this one is.",
-                textSize = 12.sp
-            )
-        }
-        Column(
-            modifier = Modifier
-                .padding(top = 14.dp)
-                .fillMaxWidth()
-        ) {
-            LabelWithRequiredBox(labelText = "TextArea")
-            InputTextArea(
-                modifier = Modifier
-                    .padding(top = 6.dp)
-                    .fillMaxWidth(),
-                onTextValueChanged = { },
-                onNextClicked = {},
-                text = ""
-            )
-            LabelText(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth(),
-                text = "Text -- but on steroids",
-                textSize = 12.sp
-            )
-        }
-        Column(
-            modifier = Modifier
-                .padding(top = 14.dp)
-                .fillMaxWidth()
-        ) {
-            LabelWithRequiredBox(labelText = "Numeric")
-            NumericFieldInput(
-                modifier = Modifier
-                    .padding(top = 6.dp)
-                    .fillMaxWidth(),
-                onTextChanged = { },
-                onNextClicked = {},
-                text = ""
-            )
-            LabelText(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth(),
-                text = "Numeric field can have validations and masks applied...",
-                textSize = 12.sp
-            )
-        }
+        MyMainFormContent(
+            modifier = Modifier.fillMaxWidth(),
+            firstText = formState.firstText ?: "",
+            textArea = formState.textArea ?: "",
+            numericValue = formState.numericValue ?: "",
+            date = formState.date ?: Date(-1),
+            isCheckBoxSelected = formState.isCheckBoxSelected,
+            isCheckBox2Selected = formState.isCheckBox2Selected,
+            textControl = formState.textControl ?: "",
+            textArea2 = formState.textArea2 ?: "",
+            numericPhone = formState.numericPhone ?: "",
+            noDescriptionNumeric = formState.noDescriptionNumeric ?: "",
+            numericPhone2 = formState.numericPhone2 ?: "",
+            onFirstTextChanged = {},
+            onTextAreaChanged = {},
+            onNumericValueChanged = {},
+            onDateValueChanged = {},
+            onCheckBoxStatusChanged = {},
+            onCheckBox2StatusChanged = {},
+            onRadioOptionSelectionStateChanged = {},
+            onDropDownMenueOptionSelected = {},
+            onTextControlChanged = {},
+            onTextArea2Changed = {},
+            onNumericPhoneChanged = {},
+            onDescriptionNumericChanged = {},
+            onNumericPhone2Changed = {}
+        )
 
-        Column(
-            modifier = Modifier
-                .padding(top = 14.dp)
-                .fillMaxWidth()
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                LabelText(text = "Date")
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    SelectDateButton(onDateSelected = {})
-                    RequirementBox(modifier = Modifier.padding(start = 12.dp))
-                }
-            }
-            LabelText(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth(),
-                text = "Opens a date picked?",
-                textSize = 12.sp
-            )
-        }
-
-
-        Column(
-            modifier = Modifier
-                .padding(top = 14.dp)
-                .fillMaxWidth()
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                CheckBoxComponent(textLabel = "Checkbox", onCheckboxStatusChanged = {})
-                RequirementBox(modifier = Modifier.padding(start = 12.dp))
-            }
-            LabelText(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth(),
-                text = "Checkbox",
-                textSize = 12.sp
-            )
-        }
-
-
-        Column(
-            modifier = Modifier
-                .padding(top = 14.dp)
-                .fillMaxWidth()
-        ) {
-            LabelWithRequiredBox(labelText = "Lorem ipsum is placeholder text commonly used in the graphic.")
-            RadioComponent(radioOptions = listOf("true", "false"), onRadioOptionSelected = {})
-            LabelText(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth(),
-                text = "Numeric field can have validations and masks applied...",
-                textSize = 12.sp
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .padding(top = 14.dp)
-                .fillMaxWidth()
-        ) {
-            LabelWithRequiredBox(labelText = "Dropdown field")
-
-            val items = listOf("Gorgia", "Florida", "Hawail", "Connecticust", "Alamba", "Dalawar")
-            DropdownMenuComponent(
-                modifier = Modifier.padding(top = 8.dp),
-                items = items,
-                onItemSelected = {})
-            LabelText(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth(),
-                text = "This is the dropdown description",
-                textSize = 12.sp
-            )
-        }
-
-
-        Column(
-            modifier = Modifier
-                .padding(top = 14.dp)
-                .fillMaxWidth()
-        ) {
-
-            CheckBoxComponent(textLabel = "Checkbox label", onCheckboxStatusChanged = {
-            })
-            LabelText(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth(),
-                text = "Checkbox",
-                textSize = 12.sp
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .padding(top = 14.dp)
-                .fillMaxWidth()
-        ) {
-            LabelText(text = "Text control")
-            FirsTextInput(
-                modifier = Modifier
-                    .padding(top = 6.dp)
-                    .fillMaxWidth(),
-                onTextChanged = { },
-                onNextClicked = {},
-                text = ""
-            )
-            LabelText(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth(),
-                text = "This is the text description without the required label. So is not required for the user!.",
-                textSize = 12.sp
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .padding(top = 14.dp)
-                .fillMaxWidth()
-        ) {
-            LabelText(text = "text area")
-            InputTextArea(
-                modifier = Modifier
-                    .padding(top = 6.dp)
-                    .fillMaxWidth(),
-                onTextValueChanged = { },
-                onNextClicked = {},
-                text = ""
-            )
-            LabelText(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth(),
-                text = "Text area description",
-                textSize = 12.sp
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .padding(top = 14.dp)
-                .fillMaxWidth()
-        ) {
-            LabelText(text = "Numeric control")
-            PhoneNumberPickerComponent(modifier = Modifier
-                .fillMaxWidth()
-                .height(80.dp))
-            LabelText(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = "+1(###)###-###",
-                textSize = 12.sp
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .padding(top = 14.dp)
-                .fillMaxWidth()
-        ) {
-            LabelText(text = "No description numeric")
-            NumericFieldInput(
-                modifier = Modifier
-                    .padding(top = 6.dp)
-                    .fillMaxWidth(),
-                onTextChanged = { },
-                onNextClicked = {},
-                text = ""
-            )
-        }
-
-
-        Column(
-            modifier = Modifier
-                .padding(top = 14.dp)
-                .fillMaxWidth()
-        ) {
-            LabelText(text = "Numeric")
-            NumericFieldInput(
-                modifier = Modifier
-                    .padding(top = 6.dp)
-                    .fillMaxWidth(),
-                onTextChanged = { },
-                onNextClicked = {},
-                text = ""
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .padding(top = 14.dp)
-                .fillMaxWidth()
-        ) {
-            LabelWithRequiredBox(labelText = "Numeric")
-            NumericFieldInput(
-                modifier = Modifier
-                    .padding(top = 6.dp)
-                    .fillMaxWidth(),
-                onTextChanged = { },
-                onNextClicked = {},
-                text = ""
-            )
-            LabelText(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth(),
-                text = "+1##########",
-                textSize = 12.sp
-            )
-        }
     }
 }
 
@@ -402,26 +141,316 @@ fun MyMainFormContent(
     modifier: Modifier = Modifier,
     firstText: String,
     textArea: String,
-    numericValue: Double,
+    numericValue: String,
     date: Date,
     isCheckBoxSelected: Boolean,
     textControl: String,
     textArea2: String,
     numericPhone: String,
+    isCheckBox2Selected: Boolean,
     noDescriptionNumeric: String,
     numericPhone2: String,
     onFirstTextChanged: (text: String) -> Unit,
     onTextAreaChanged: (text: String) -> Unit,
-    onNumericValueChanged: (number: Double) -> Unit,
+    onNumericValueChanged: (number: String) -> Unit,
     onDateValueChanged: (date: Date) -> Unit,
-    onCheckBoxSelected: (isSelect: Boolean) -> Unit,
+    onCheckBoxStatusChanged: (isSelect: Boolean) -> Unit,
+    onRadioOptionSelectionStateChanged: (isSelected: Boolean) -> Unit,
+    onDropDownMenueOptionSelected: (option: String) -> Unit,
+    onCheckBox2StatusChanged: (isSelect: Boolean) -> Unit,
     onTextControlChanged: (text: String) -> Unit,
     onTextArea2Changed: (text: String) -> Unit,
     onNumericPhoneChanged: (phone: String) -> Unit,
     onDescriptionNumericChanged: (text: String) -> Unit,
     onNumericPhone2Changed: (text: String) -> Unit
 ) {
+    Column(
+        modifier = Modifier
+            .padding(top = 14.dp)
+            .fillMaxWidth()
+    ) {
+        LabelWithRequiredBox(labelText = "Text")
+        FirsTextInput(
+            modifier = Modifier
+                .padding(top = 6.dp)
+                .fillMaxWidth(),
+            onTextChanged = onFirstTextChanged,
+            onNextClicked = {},
+            text = firstText
+        )
+        LabelText(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
+            text = "This is a text field. Field can be required -- this one is.",
+            textSize = 12.sp
+        )
+    }
+    Column(
+        modifier = Modifier
+            .padding(top = 14.dp)
+            .fillMaxWidth()
+    ) {
+        LabelWithRequiredBox(labelText = "TextArea")
+        InputTextArea(
+            modifier = Modifier
+                .padding(top = 6.dp)
+                .fillMaxWidth(),
+            onTextValueChanged = onTextAreaChanged,
+            onNextClicked = {},
+            text = textArea
+        )
+        LabelText(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
+            text = "Text -- but on steroids",
+            textSize = 12.sp
+        )
+    }
+    Column(
+        modifier = Modifier
+            .padding(top = 14.dp)
+            .fillMaxWidth()
+    ) {
+        LabelWithRequiredBox(labelText = "Numeric")
+        NumericFieldInput(
+            modifier = Modifier
+                .padding(top = 6.dp)
+                .fillMaxWidth(),
+            onTextChanged = onNumericValueChanged,
+            onNextClicked = {},
+            text = numericValue
+        )
+        LabelText(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
+            text = "Numeric field can have validations and masks applied...",
+            textSize = 12.sp
+        )
+    }
 
+    Column(
+        modifier = Modifier
+            .padding(top = 14.dp)
+            .fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            LabelText(text = "Date")
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                SelectDateButton(onDateSelected = onDateValueChanged)
+                RequirementBox(modifier = Modifier.padding(start = 12.dp))
+            }
+        }
+        LabelText(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
+            text = "Opens a date picked?",
+            textSize = 12.sp
+        )
+    }
+
+
+    Column(
+        modifier = Modifier
+            .padding(top = 14.dp)
+            .fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            CheckBoxComponent(
+                textLabel = "Checkbox",
+                onCheckboxStatusChanged = onCheckBoxStatusChanged,
+                isChecked = isCheckBoxSelected
+            )
+            RequirementBox(modifier = Modifier.padding(start = 12.dp))
+        }
+        LabelText(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
+            text = "Checkbox",
+            textSize = 12.sp
+        )
+    }
+
+
+    Column(
+        modifier = Modifier
+            .padding(top = 14.dp)
+            .fillMaxWidth()
+    ) {
+        LabelWithRequiredBox(labelText = "Lorem ipsum is placeholder text commonly used in the graphic.")
+        RadioComponent(
+            radioOptions = listOf("true", "false"),
+            onRadioOptionSelected = onRadioOptionSelectionStateChanged
+        )
+        LabelText(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
+            text = "Numeric field can have validations and masks applied...",
+            textSize = 12.sp
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .padding(top = 14.dp)
+            .fillMaxWidth()
+    ) {
+        LabelWithRequiredBox(labelText = "Dropdown field")
+
+        val items = listOf("Gorgia", "Florida", "Hawail", "Connecticust", "Alamba", "Dalawar")
+        DropdownMenuComponent(
+            modifier = Modifier.padding(top = 8.dp),
+            items = items,
+            onItemSelected = onDropDownMenueOptionSelected
+        )
+        LabelText(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
+            text = "This is the dropdown description",
+            textSize = 12.sp
+        )
+    }
+
+
+    Column(
+        modifier = Modifier
+            .padding(top = 14.dp)
+            .fillMaxWidth()
+    ) {
+
+        CheckBoxComponent(
+            isChecked = isCheckBox2Selected,
+            textLabel = "Checkbox label",
+            onCheckboxStatusChanged = onCheckBox2StatusChanged
+        )
+        LabelText(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
+            text = "Checkbox",
+            textSize = 12.sp
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .padding(top = 14.dp)
+            .fillMaxWidth()
+    ) {
+        LabelText(text = "Text control")
+        FirsTextInput(
+            modifier = Modifier
+                .padding(top = 6.dp)
+                .fillMaxWidth(),
+            onTextChanged = onTextControlChanged,
+            onNextClicked = {},
+            text = textControl
+        )
+        LabelText(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
+            text = "This is the text description without the required label. So is not required for the user!.",
+            textSize = 12.sp
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .padding(top = 14.dp)
+            .fillMaxWidth()
+    ) {
+        LabelText(text = "text area")
+        InputTextArea(
+            modifier = Modifier
+                .padding(top = 6.dp)
+                .fillMaxWidth(),
+            onTextValueChanged = onTextArea2Changed,
+            onNextClicked = {},
+            text = textArea2
+        )
+        LabelText(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
+            text = "Text area description",
+            textSize = 12.sp
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .padding(top = 14.dp)
+            .fillMaxWidth()
+    ) {
+        LabelText(text = "Numeric control")
+        PhoneNumberPickerComponent(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp),
+            phoneNumber = numericPhone,
+            onPhoneNumberEdited = onNumericPhoneChanged
+        )
+        LabelText(
+            modifier = Modifier
+                .fillMaxWidth(),
+            text = "+1(###)###-###",
+            textSize = 12.sp
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .padding(top = 14.dp)
+            .fillMaxWidth()
+    ) {
+        LabelText(text = "No description numeric")
+        NumericFieldInput(
+            modifier = Modifier
+                .padding(top = 6.dp)
+                .fillMaxWidth(),
+            onTextChanged = onDescriptionNumericChanged,
+            onNextClicked = {},
+            text = noDescriptionNumeric
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .padding(top = 14.dp)
+            .fillMaxWidth()
+    ) {
+        LabelWithRequiredBox(labelText = "Numeric")
+        NumericFieldInput(
+            modifier = Modifier
+                .padding(top = 6.dp)
+                .fillMaxWidth(),
+            onTextChanged = onNumericPhone2Changed,
+            onNextClicked = {},
+            text = numericPhone2
+        )
+        LabelText(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
+            text = "+1##########",
+            textSize = 12.sp
+        )
+    }
 }
 
 
