@@ -40,7 +40,7 @@ fun RequirementBox(modifier: Modifier = Modifier) {
             .padding(horizontal = 8.dp, vertical = 6.dp)
 
     ) {
-        Text(text = stringResource(id = R.string.required), color = Color.Blue, fontSize = 12.sp)
+        Text(text = stringResource(id = R.string.required), color = colorResource(id = R.color.blue), fontSize = 12.sp)
     }
 }
 

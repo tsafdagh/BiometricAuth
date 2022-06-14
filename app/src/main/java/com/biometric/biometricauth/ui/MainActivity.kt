@@ -268,7 +268,7 @@ fun MyMainFrom(
                 .padding(top = 14.dp)
                 .fillMaxWidth()
         ) {
-            LabelText(text =  "Text control")
+            LabelText(text = "Text control")
             FirsTextInput(
                 modifier = Modifier
                     .padding(top = 6.dp)
@@ -309,7 +309,78 @@ fun MyMainFrom(
             )
         }
 
-        PhoneNumberPickerComponent(modifier =Modifier.fillMaxWidth())
+        Column(
+            modifier = Modifier
+                .padding(top = 14.dp)
+                .fillMaxWidth()
+        ) {
+            LabelText(text = "Numeric control")
+            PhoneNumberPickerComponent(modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp))
+            LabelText(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = "+1(###)###-###",
+                textSize = 12.sp
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .padding(top = 14.dp)
+                .fillMaxWidth()
+        ) {
+            LabelText(text = "No description numeric")
+            NumericFieldInput(
+                modifier = Modifier
+                    .padding(top = 6.dp)
+                    .fillMaxWidth(),
+                onTextChanged = { },
+                onNextClicked = {},
+                text = ""
+            )
+        }
+
+
+        Column(
+            modifier = Modifier
+                .padding(top = 14.dp)
+                .fillMaxWidth()
+        ) {
+            LabelText(text = "Numeric")
+            NumericFieldInput(
+                modifier = Modifier
+                    .padding(top = 6.dp)
+                    .fillMaxWidth(),
+                onTextChanged = { },
+                onNextClicked = {},
+                text = ""
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .padding(top = 14.dp)
+                .fillMaxWidth()
+        ) {
+            LabelWithRequiredBox(labelText = "Numeric")
+            NumericFieldInput(
+                modifier = Modifier
+                    .padding(top = 6.dp)
+                    .fillMaxWidth(),
+                onTextChanged = { },
+                onNextClicked = {},
+                text = ""
+            )
+            LabelText(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth(),
+                text = "+1##########",
+                textSize = 12.sp
+            )
+        }
     }
 }
 

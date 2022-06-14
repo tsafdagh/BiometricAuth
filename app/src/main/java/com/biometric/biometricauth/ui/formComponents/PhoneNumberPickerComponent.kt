@@ -1,16 +1,10 @@
 package com.biometric.biometricauth.ui.formComponents
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.togitech.ccp.component.TogiCountryCodePicker
 import com.togitech.ccp.data.utils.checkPhoneNumber
 import com.togitech.ccp.data.utils.getDefaultLangCode
@@ -49,12 +43,12 @@ fun PhoneNumberPickerComponent(modifier: Modifier= Modifier) {
         fullPhoneNumber = fullPhoneNumber,
         countryCode = defaultLang
     )
-
+/*
     verifyText = if (checkPhoneNumber) {
         isValidPhone = true
         "Phone Number Correct"
     } else {
         isValidPhone = false
         "Phone Number is Wrong"
-    }
+    }*/
 }
