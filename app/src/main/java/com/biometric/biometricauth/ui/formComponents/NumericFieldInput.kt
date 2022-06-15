@@ -26,7 +26,7 @@ fun NumericFieldInput(
         },
         singleLine = true,
         keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Next,
+            imeAction = ImeAction.None,
             keyboardType = KeyboardType.Number
         ),
         keyboardActions = KeyboardActions(

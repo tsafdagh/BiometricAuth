@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun RadioComponent(modifier: Modifier = Modifier,radioOptions: List<String>, onRadioOptionSelected: (option: Boolean) -> Unit) {
+fun RadioComponent(modifier: Modifier = Modifier,radioOptions: List<String>,radioOptionSelection:String, onRadioOptionSelected: (option: String) -> Unit) {
 
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf("") }
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptionSelection) }
 
     Column(modifier = modifier) {
         radioOptions.forEachIndexed { index, text ->
@@ -46,7 +46,7 @@ fun RadioComponent(modifier: Modifier = Modifier,radioOptions: List<String>, onR
                         selected = (text == selectedOption),
                         onClick = {
                             onOptionSelected(text)
-                            onRadioOptionSelected(text=="true")
+                            onRadioOptionSelected(text)
                         }
                     )
                     .background(
@@ -61,7 +61,7 @@ fun RadioComponent(modifier: Modifier = Modifier,radioOptions: List<String>, onR
                     modifier = Modifier.padding(all = Dp(value = 6F)),
                     onClick = {
                         onOptionSelected(text)
-                        onRadioOptionSelected(text=="true")
+                        onRadioOptionSelected(text)
                     }
                 )
                 Text(

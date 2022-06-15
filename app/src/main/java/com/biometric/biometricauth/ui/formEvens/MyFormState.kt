@@ -8,6 +8,8 @@ data class MyFormState(
     val numericValue:String? = null,
     val date: Date? = null,
     val isCheckBoxSelected:Boolean = false,
+    val radioOptionSelection: String = "",
+    val dropDownSelection:String?="",
     val isCheckBox2Selected:Boolean = false,
     val textControl:String? = null,
     val textArea2:String? = null,

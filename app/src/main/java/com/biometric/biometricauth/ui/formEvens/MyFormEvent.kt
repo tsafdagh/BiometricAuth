@@ -8,9 +8,10 @@ sealed class MyFormEvent {
 
     class TextChanged(val text: String) : MyFormEvent()
     class TextAreaChanged(val text: String) : MyFormEvent()
-    class NumericChanged(val number: Double) : MyFormEvent()
+    class NumericChanged(val number: String) : MyFormEvent()
     class DateChanged(val date: Date) : MyFormEvent()
     class CheckBoxChanged(val isChecked: Boolean) : MyFormEvent()
+    class CheckBox2Changed(val isChecked: Boolean) : MyFormEvent()
     class RadioButtonSelected(val selectedValue: String) : MyFormEvent()
     class DropDownSelected(val value: String) : MyFormEvent()
     class SingleCheckBoxChanged(val isChecked: Boolean) : MyFormEvent()

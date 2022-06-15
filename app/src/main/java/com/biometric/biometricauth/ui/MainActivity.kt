@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,6 +38,7 @@ import com.biometric.biometricauth.ui.components.*
 import com.biometric.biometricauth.ui.enums.AuthenticationMode
 import com.biometric.biometricauth.ui.enums.PasswordRequirements
 import com.biometric.biometricauth.ui.formComponents.*
+import com.biometric.biometricauth.ui.formEvens.MyFormEvent
 import com.biometric.biometricauth.ui.formEvens.MyFormState
 import com.biometric.biometricauth.ui.stateEvents.AuthenticationEvent
 import com.biometric.biometricauth.ui.theme.BiometricAuthTheme
@@ -66,7 +68,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxWidth(),
                         formState = viewModel.uiFormState.collectAsState().value,
                         application = application,
-                        handleEvent = viewModel::handleEvent
+                        handleEvent = viewModel::handleFromEven
                     )
                 }
             }
@@ -80,7 +82,7 @@ fun MyMainFrom(
     modifier: Modifier = Modifier,
     formState: MyFormState,
     application: Application,
-    handleEvent: (event: AuthenticationEvent) -> Unit
+    handleEvent: (event: MyFormEvent) -> Unit
 ) {
 
     Column(
@@ -105,19 +107,20 @@ fun MyMainFrom(
             numericPhone = formState.numericPhone ?: "",
             noDescriptionNumeric = formState.noDescriptionNumeric ?: "",
             numericPhone2 = formState.numericPhone2 ?: "",
-            onFirstTextChanged = {},
-            onTextAreaChanged = {},
-            onNumericValueChanged = {},
-            onDateValueChanged = {},
-            onCheckBoxStatusChanged = {},
-            onCheckBox2StatusChanged = {},
-            onRadioOptionSelectionStateChanged = {},
-            onDropDownMenueOptionSelected = {},
-            onTextControlChanged = {},
-            onTextArea2Changed = {},
-            onNumericPhoneChanged = {},
-            onDescriptionNumericChanged = {},
-            onNumericPhone2Changed = {}
+            radioOptionSelection = formState.radioOptionSelection,
+            onFirstTextChanged = {handleEvent(MyFormEvent.TextChanged(it))},
+            onTextAreaChanged = {handleEvent(MyFormEvent.TextAreaChanged(it))},
+            onNumericValueChanged = {handleEvent(MyFormEvent.NumericChanged(it))},
+            onDateValueChanged = {handleEvent(MyFormEvent.DateChanged(it))},
+            onCheckBoxStatusChanged = {handleEvent(MyFormEvent.CheckBoxChanged(it))},
+            onCheckBox2StatusChanged = {handleEvent(MyFormEvent.CheckBox2Changed(it))},
+            onRadioOptionSelectionStateChanged = {handleEvent(MyFormEvent.RadioButtonSelected(it))},
+            onDropDownMenueOptionSelected ={handleEvent(MyFormEvent.DropDownSelected(it))},
+            onTextControlChanged = {handleEvent(MyFormEvent.TextControlChanged(it))},
+            onTextArea2Changed = {handleEvent(MyFormEvent.TextArea2Changed(it))},
+            onNumericPhoneChanged = {handleEvent(MyFormEvent.NumericPhoneFieldChanged(it))},
+            onDescriptionNumericChanged = {handleEvent(MyFormEvent.NoDescriptionNumericChanged(it))},
+            onNumericPhone2Changed = {handleEvent(MyFormEvent.NumericPhone2FieldChanged(it))}
         )
 
     }
@@ -146,6 +149,7 @@ fun MyMainFormContent(
     isCheckBoxSelected: Boolean,
     textControl: String,
     textArea2: String,
+    radioOptionSelection:String,
     numericPhone: String,
     isCheckBox2Selected: Boolean,
     noDescriptionNumeric: String,
@@ -155,7 +159,7 @@ fun MyMainFormContent(
     onNumericValueChanged: (number: String) -> Unit,
     onDateValueChanged: (date: Date) -> Unit,
     onCheckBoxStatusChanged: (isSelect: Boolean) -> Unit,
-    onRadioOptionSelectionStateChanged: (isSelected: Boolean) -> Unit,
+    onRadioOptionSelectionStateChanged: (selection: String) -> Unit,
     onDropDownMenueOptionSelected: (option: String) -> Unit,
     onCheckBox2StatusChanged: (isSelect: Boolean) -> Unit,
     onTextControlChanged: (text: String) -> Unit,
@@ -291,7 +295,9 @@ fun MyMainFormContent(
     ) {
         LabelWithRequiredBox(labelText = "Lorem ipsum is placeholder text commonly used in the graphic.")
         RadioComponent(
+
             radioOptions = listOf("true", "false"),
+            radioOptionSelection =radioOptionSelection,
             onRadioOptionSelected = onRadioOptionSelectionStateChanged
         )
         LabelText(
@@ -398,10 +404,13 @@ fun MyMainFormContent(
             .fillMaxWidth()
     ) {
         LabelText(text = "Numeric control")
+
+        //https://stackoverflow.com/questions/67423074/jetpack-compose-setting-cursor-on-end-of-textfield
+        //https://medium.com/@patilshreyas/filtering-and-modifying-text-input-in-jetpack-compose-way-8f7eeedd958
         PhoneNumberPickerComponent(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(80.dp),
+                .padding(0.dp)
+                .fillMaxWidth(),
             phoneNumber = numericPhone,
             onPhoneNumberEdited = onNumericPhoneChanged
         )
@@ -435,7 +444,7 @@ fun MyMainFormContent(
             .fillMaxWidth()
     ) {
         LabelWithRequiredBox(labelText = "Numeric")
-        NumericFieldInput(
+        NumericInputFieldAdd1(
             modifier = Modifier
                 .padding(top = 6.dp)
                 .fillMaxWidth(),
@@ -451,217 +460,6 @@ fun MyMainFormContent(
             textSize = 12.sp
         )
     }
-}
-
-
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun AuthenticationForm(
-    modifier: Modifier = Modifier,
-    authenticationMode: AuthenticationMode,
-    email: String?,
-    password: String?,
-    completedPasswordRequirements: List<PasswordRequirements>,
-    enableAuthentication: Boolean,
-    onEmailChanged: (email: String) -> Unit,
-    onPasswordChanged: (password: String) -> Unit,
-    onToggleMode: () -> Unit,
-    onAuthenticate: () -> Unit,
-) {
-
-    Spacer(modifier = Modifier.height(40.dp))
-    val passwordFocusRequester = FocusRequester()
-
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AuthenticationTitle(authenticationMode = authenticationMode)
-        AuthenticationHeaderImage()
-        EmailInput(
-            modifier = Modifier.fillMaxWidth(),
-            email = email ?: "",
-            onEmailChanged = onEmailChanged
-        ) {
-            passwordFocusRequester.requestFocus()
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        PasswordInput(
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(passwordFocusRequester),
-            password = password,
-            onPasswordChanged = onPasswordChanged,
-            onDoneClicked = onAuthenticate
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-
-        AnimatedVisibility(
-            visible = authenticationMode ==
-                    AuthenticationMode.SIGN_UP
-        ) {
-            PasswordRequirementsComponent(modifier = Modifier, completedPasswordRequirements)
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        AuthenticationButton(
-            enableAuthentication = enableAuthentication,
-            authenticationMode = authenticationMode,
-            onAuthenticate = onAuthenticate
-        )
-
-        Spacer(modifier = Modifier.padding(10.dp))
-        Spacer(modifier = Modifier.weight(1f))
-
-        ToggleAuthenticationModeComponent(
-            modifier = Modifier.fillMaxWidth(),
-            authenticationMode = authenticationMode,
-            toggleAuthentication = {
-                onToggleMode()
-            }
-        )
-    }
-}
-
-
-@Composable
-fun BioMetricScreen(onClick: () -> Unit) {
-    val context = LocalContext.current
-    val emailVal = remember { mutableStateOf("") }
-    val passwordVal = remember { mutableStateOf("") }
-    val passwordVisibility = remember { mutableStateOf(false) }
-    val checked = remember { mutableStateOf(false) }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.White),
-
-        ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .background(Purple500),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "BioMetric FingerPrint",
-                color = Color.White,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-
-            AuthenticationHeaderImage()
-
-            Spacer(modifier = Modifier.padding(10.dp))
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 15.dp, end = 15.dp)
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(Color.LightGray),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    modifier = Modifier.padding(top = 6.dp),
-                    text = "LogIn",
-                    fontSize = 30.sp,
-                    style = MaterialTheme.typography.h1,
-                )
-
-                Spacer(modifier = Modifier.padding(15.dp))
-
-                OutlinedTextField(
-                    value = emailVal.value,
-                    onValueChange = { emailVal.value = it },
-                    label = { Text(text = "Email Address") },
-                    placeholder = { Text(text = "Email Address") },
-                    leadingIcon = { Icon(Icons.Filled.Email, contentDescription = "Email") },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(0.8f)
-                )
-
-                //if (state.emailError != null) {
-                //   Text(text = state.emailError, color = MaterialTheme.colors.error)
-                // }
-
-                OutlinedTextField(
-                    value = passwordVal.value,
-                    onValueChange = { passwordVal.value = it },
-                    trailingIcon = {
-                        IconButton(
-                            onClick = {
-                                passwordVisibility.value = !passwordVisibility.value
-                            }
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.password_eye),
-                                contentDescription = "password eye",
-                                tint = if (passwordVisibility.value) Purple500 else Color.Gray
-                            )
-                        }
-                    },
-                    label = { Text(text = "Password") },
-                    placeholder = { Text(text = "Password") },
-                    leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password") },
-                    singleLine = true,
-                    visualTransformation = if (passwordVisibility.value)
-                        VisualTransformation.None else PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth(0.8f)
-                )
-
-                // if (state.passwordError != null) {
-                //   Text(text = state.passwordError, color = MaterialTheme.colors.error)
-                // }
-                Text(
-                    text = stringResource(id = R.string.forgot_pw),
-                    color = if (!isSystemInDarkTheme()) Color.Black.copy(alpha = 0.7f)
-                    else Color.Gray,
-                )
-
-                Spacer(modifier = Modifier.padding(10.dp))
-
-                Button(
-                    onClick = {
-                        if (emailVal.value.isEmpty()) {
-                            Toast.makeText(
-                                context,
-                                "Please enter email address!",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else if (passwordVal.value.isEmpty()) {
-                            Toast.makeText(context, "Please enter password!", Toast.LENGTH_SHORT)
-                                .show()
-                        } else {
-                            Toast.makeText(context, "Logged Successfully!", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f)
-                        .height(50.dp)
-                ) {
-                    Text(text = stringResource(id = R.string.login), fontSize = 20.sp)
-                }
-
-                Spacer(modifier = Modifier.padding(20.dp))
-
-            }
-        }
-    }
-
 }
 
 
