@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.biometric.biometricauth.PhoneNumberTransformation
+import com.biometric.biometricauth.PrefixTransformation
 
 
 @Composable
@@ -22,17 +22,9 @@ fun NumericInputFieldAdd1(
     TextField(
         modifier = modifier,
         shape = RoundedCornerShape(5.dp),
-        value = if (text.isNotEmpty()) {
-            "+1$text"
-        } else {
-            ""
-        },
+        value = text,
         onValueChange = { text ->
-            if (text.isNotEmpty()) {
-                onTextChanged(text.removePrefix("+1"))
-            } else {
-                onTextChanged(text)
-            }
+            onTextChanged(text)
         },
         singleLine = true,
         keyboardOptions = KeyboardOptions(
@@ -44,5 +36,6 @@ fun NumericInputFieldAdd1(
                 onNextClicked()
             },
         ),
+        visualTransformation = PrefixTransformation("+1")
     )
 }

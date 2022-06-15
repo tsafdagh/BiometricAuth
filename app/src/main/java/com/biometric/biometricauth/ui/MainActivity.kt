@@ -405,8 +405,6 @@ fun MyMainFormContent(
     ) {
         LabelText(text = "Numeric control")
 
-        //https://stackoverflow.com/questions/67423074/jetpack-compose-setting-cursor-on-end-of-textfield
-        //https://medium.com/@patilshreyas/filtering-and-modifying-text-input-in-jetpack-compose-way-8f7eeedd958
         PhoneNumberPickerComponent(
             modifier = Modifier
                 .padding(0.dp)
@@ -452,6 +450,8 @@ fun MyMainFormContent(
             onNextClicked = {},
             text = numericPhone2
         )
+
+        //https://stackoverflow.com/questions/67735208/how-to-prefix-country-code-in-textfield-using-jetpack-compose
         LabelText(
             modifier = Modifier
                 .padding(top = 8.dp)
